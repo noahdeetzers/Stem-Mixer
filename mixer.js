@@ -11,7 +11,10 @@ async function getFile(audioContext, filepath) {
 let playbackRate = 1;
 let accompanimentVolume = 100;
 
-let noteString = "https://www.nwhsaob.com/Midi/samplestwo/kick.mp3";
+// let noteString = "https://www.nwhsaob.com/Midi/samplestwo/kick.mp3";
+let noteString = "https://github.com/noahdeetzers/Stem-Mixer/blob/main/Whole_Lotta_Love_Stems/slide%20guitar%20-%20solo.wav";
+
+
 let time = 0;
 // function playSample(audioContext, audioBuffer, time) {
 
