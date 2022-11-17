@@ -1,44 +1,124 @@
-const audioCtx = window.AudioContext ? new AudioContext() : new webkitAudioContext();
+console.clear();
 
-async function getFile(audioContext, filepath) {
-  const response = await fetch(filepath);
-  const arrayBuffer = await response.arrayBuffer();
-  // ! A callback has been added here as a second param for Safari only !
-  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer, function() {return});
-  return audioBuffer;
-}
+// instigate our audio context
 
-let playbackRate = 1;
-let accompanimentVolume = 100;
+// for cross browser
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
 
-// let noteString = "https://www.nwhsaob.com/Midi/samplestwo/kick.mp3";
-let noteString = "https://github.com/noahdeetzers/Stem-Mixer/blob/main/Whole_Lotta_Love_Stems/slide%20guitar%20-%20solo.wav";
+// load some sound
+
+ audio1 = new Audio();
+ audio1.src = "bassguitar.mp3";
+const audioElement = document.getElementById('audio1');
 
 
-let time = 0;
-// function playSample(audioContext, audioBuffer, time) {
+const track = audioCtx.createMediaElementSource(audioElement);
 
+const playButton = document.querySelector('.tape-controls-play');
+
+// play pause audio
+playButton.addEventListener('click', function() {
+	
+	// check if context is in suspended state (autoplay policy)
+	if (audioCtx.state === 'suspended') {
+		audioCtx.resume();
+	}
+	
+	if (this.dataset.playing === 'false') {
+		audioElement.play();
+		this.dataset.playing = 'true';
+	// if track is playing pause it
+	} else if (this.dataset.playing === 'true') {
+		audioElement.pause();
+		this.dataset.playing = 'false';
+	}
+	
+	let state = this.getAttribute('aria-checked') === "true" ? true : false;
+	this.setAttribute( 'aria-checked', state ? "false" : "true" );
+	
+}, false);
+
+// if track ends
+audioElement.addEventListener('ended', () => {
+	playButton.dataset.playing = 'false';
+	playButton.setAttribute( "aria-checked", "false" );
+}, false);
+
+// volume
+const gainNode = audioCtx.createGain();
+
+const volumeControl = document.querySelector('[data-action="volume"]');
+volumeControl.addEventListener('input', function() {
+	gainNode.gain.value = this.value;
+}, false);
+
+// panning
+const pannerOptions = {pan: 0};
+const panner = new StereoPannerNode(audioCtx, pannerOptions);
+
+const pannerControl = document.querySelector('[data-action="panner"]');
+pannerControl.addEventListener('input', function() {
+	panner.pan.value = this.value;	
+}, false);
+
+// connect our graph
+track.connect(gainNode).connect(panner).connect(audioCtx.destination);
+
+const powerButton = document.querySelector('.control-power');
+
+powerButton.addEventListener('click', function() {
+	if (this.dataset.power === 'on') {
+		audioCtx.suspend();
+		this.dataset.power = 'off';
+	} else if (this.dataset.power === 'off') {
+		audioCtx.resume();
+		this.dataset.power = 'on';
+	}
+	this.setAttribute( "aria-checked", state ? "false" : "true" );
+	console.log(audioCtx.state);
+}, false);
+
+// Track credit: Outfoxing the Fox by Kevin MacLeod under Creative Commons 
+
+
+
+
+
+
+
+// OLD CODE TO PLAY
+
+// const volume = document.getElementById("volume");
+
+// const context = new AudioContext();
+// const gainNode = new GainNode(context, { gain: volume.value});
+
+// volume.addEventListener('input', e => {
+//     const value = parseFloat(e.target.value)
+//     gainNode.gain.setTargetAtTime(value, context.currentTime, .01)
+//     console.log(value);
+// })
+
+//  audio1 = new Audio();
+//  audio1.src = "bassguitar.mp3";
+//  audio2 = new Audio();
+//  audio2.src = "clav.mp3";
+//  audio3 = new Audio();
+//  audio3.src = "drums.mp3";
+//  audio4 = new Audio();
+//  audio4.src = "horns.mp3";
+//  audio5 = new Audio();
+//  audio5.src = "leadguitar.mp3";
+
+// const source = context.createMediaElementSource(audio1);
+// source.connect(gainNode)
+// source.connect(context.destination)
+
+// function playFile() {
+//     audio1.play();
+//     audio2.play();
+//     audio3.play();
+//     audio4.play();
+//     audio5.play();
 // }
-
-async function setupSample() {
-  let filePath = noteString;
-  // Here we're `await`ing the async/promise that is `getFile`.
-  // To be able to use this keyword we need to be within an `async` function
-  const sample = await getFile(audioCtx, filePath);
-
-
-// CODE FROM PLAYSAMPLE
-  const gainNode = audioCtx.createGain();
-  console.error(accompanimentVolume/100);
-  gainNode.gain.value = accompanimentVolume/100;
-  gainNode.connect(audioCtx.destination);
-  const sampleSource = audioCtx.createBufferSource();
-  
-  sampleSource.buffer = audioBuffer;
-  // sampleSource.buffer.volume
-  sampleSource.playbackRate.value = playbackRate;
-  sampleSource.connect(gainNode);
-  // sampleSource.connect(audioContext.destination)
-  sampleSource.start(time);
-  return sampleSource;
-}
