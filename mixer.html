@@ -3,24 +3,99 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="mixerStyle.css" />
+
     <title>Audio Mixer</title>
 
 </head>
 <body>
-    <div id="track1">
-        <input type="range" id="volume" class="control-volume" min="0" max="2" value="1" list="gain-vals" step="0.01" data-action="volume" />
-        <label for="volume">VOL</label>
+    <div id="track1" class="track"> DRUMS
+        <input type="range" id="volume1" min="0" max="2" value="1" step="0.01"/>
+        <label for="volume1">VOL</label>
 
-        <input type="range" id="panner" class="control-panner" list="pan-vals" min="-1" max="1" value="0" step="0.01" data-action="panner" />
-        <label for="panner">PAN</label>
+        <input type="range" id="panner1" min="-1" max="1" value="0" step="0.01"/>
+        <label for="panner1">PAN</label>
         
-        <button id="onoff1" class="onOffButton" role="switch" aria-checked="false" data-power="on">
+        <button id="onoff1" class="onOffButton" aria-checked="false" data-power="on">
             <label for="onoff1">ON/OFF</label>
         </button>
 
         <audio id="audio1" src="https://audio.jukehost.co.uk/8C3FUJxrSlDL0mpNEAd6FycLkH8wc0vo" crossorigin="anonymous" ></audio>
 
-        <button data-playing="false" class="track1Play" role="switch" aria-checked="false">
+        <button id="play1" data-playing="false" class="playButton" role="switch" aria-checked="false">
+            <span>Play/Pause</span>
+        </button>
+    </div>
+
+    <div id="track2" class="track"> BASS
+        <input type="range" id="volume2" min="0" max="2" value="1" step="0.01"/>
+        <label for="volume2">VOL</label>
+
+        <input type="range" id="panner2" min="-1" max="1" value="0" step="0.01"/>
+        <label for="panner2">PAN</label>
+        
+        <button id="onoff2" class="onOffButton" aria-checked="false" data-power="on">
+            <label for="onoff2">ON/OFF</label>
+        </button>
+
+        <audio id="audio2" src="https://audio.jukehost.co.uk/8C3FUJxrSlDL0mpNEAd6FycLkH8wc0vo" crossorigin="anonymous" ></audio>
+
+        <button id="play2" data-playing="false" class="playButton" role="switch" aria-checked="false">
+            <span>Play/Pause</span>
+        </button>
+    </div>
+
+    <div id="track3" class="track"> CLAV
+        <input type="range" id="volume3" min="0" max="2" value="1" step="0.01"/>
+        <label for="volume3">VOL</label>
+
+        <input type="range" id="panner3" min="-1" max="1" value="0" step="0.01"/>
+        <label for="panner3">PAN</label>
+        
+        <button id="onoff3" class="onOffButton" aria-checked="false" data-power="on">
+            <label for="onoff3">ON/OFF</label>
+        </button>
+
+        <audio id="audio3" src="https://audio.jukehost.co.uk/8C3FUJxrSlDL0mpNEAd6FycLkH8wc0vo" crossorigin="anonymous" ></audio>
+
+        <button id="play3" data-playing="false" class="playButton" role="switch" aria-checked="false">
+            <span>Play/Pause</span>
+        </button>
+    </div>
+
+    <div id="track4" class="track"> HORNS
+        <input type="range" id="volume4" min="0" max="2" value="1" step="0.01"/>
+        <label for="volume4">VOL</label>
+
+        <input type="range" id="panner4" min="-1" max="1" value="0" step="0.01"/>
+        <label for="panner4">PAN</label>
+        
+        <button id="onoff4" class="onOffButton" aria-checked="false" data-power="on">
+            <label for="onoff4">ON/OFF</label>
+        </button>
+
+        <audio id="audio4" src="https://audio.jukehost.co.uk/8C3FUJxrSlDL0mpNEAd6FycLkH8wc0vo" crossorigin="anonymous" ></audio>
+
+        <button id="play4" data-playing="false" class="playButton" role="switch" aria-checked="false">
+            <span>Play/Pause</span>
+        </button>
+    </div>
+
+    <div id="track5" class="track"> LEAD GUITAR
+        <input type="range" id="volume5" min="0" max="2" value="1" step="0.01"/>
+        <label for="volume5">VOL</label>
+
+        <input type="range" id="panner5" min="-1" max="1" value="0" step="0.01"/>
+        <label for="panner5">PAN</label>
+        
+        <button id="onoff5" class="onOffButton" aria-checked="false" data-power="on">
+            <label for="onoff5">ON/OFF</label>
+        </button>
+
+        <audio id="audio5" src="https://audio.jukehost.co.uk/8C3FUJxrSlDL0mpNEAd6FycLkH8wc0vo" crossorigin="anonymous" ></audio>
+
+        <button id="play5" data-playing="false" class="playButton" role="switch" aria-checked="false">
             <span>Play/Pause</span>
         </button>
     </div>
@@ -28,9 +103,18 @@
 
 </body>
 
-
 <script src="mixer.js"></script>
 
 </html>
 
 
+
+
+<!-- TODO -->
+<!-- 
+1.  Hook up the javascript so that multiple tracks can be adjusted
+2.  make sure that they all can play synchronously - if possible have the mute button just mute the individual track
+3.  dynamically program the tracks and clean up redundant code in js file
+4.  possibly add eq, compressor and maybe look into doing individual reverb tracks or a reverb send
+5.  work on graphics and css styling - maybe use visual design tool
+ -->

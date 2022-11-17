@@ -2,18 +2,14 @@
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
-// load the audio files
-audio1 = new Audio();
-audio1.src = "bassguitar.mp3";
-const audioElement = document.getElementById('audio1');
 
+const audioElement1 = document.getElementById('audio1');
+const track1 = audioCtx.createMediaElementSource(audioElement1);
 
-const track = audioCtx.createMediaElementSource(audioElement);
-
-const playButton = document.querySelector('.track1Play');
+const playButton1 = document.getElementById('play1');
 
 // play pause audio
-playButton.addEventListener('click', function() {
+playButton1.addEventListener('click', function() {
 	
 	// check if context is in suspended state (autoplay policy)
 	if (audioCtx.state === 'suspended') {
@@ -21,11 +17,11 @@ playButton.addEventListener('click', function() {
 	}
 	
 	if (this.dataset.playing === 'false') {
-		audioElement.play();
+		audioElement1.play();
 		this.dataset.playing = 'true';
-	// if track is playing pause it
+	// if track1 is playing pause it
 	} else if (this.dataset.playing === 'true') {
-		audioElement.pause();
+		audioElement1.pause();
 		this.dataset.playing = 'false';
 	}
 	
@@ -34,34 +30,34 @@ playButton.addEventListener('click', function() {
 	
 }, false);
 
-// if track ends
-audioElement.addEventListener('ended', () => {
-	playButton.dataset.playing = 'false';
-	playButton.setAttribute( "aria-checked", "false" );
+// if track1 ends
+audioElement1.addEventListener('ended', () => {
+	playButton1.dataset.playing = 'false';
+	playButton1.setAttribute( "aria-checked", "false" );
 }, false);
 
 // volume
-const gainNode = audioCtx.createGain();
+const gainNode1 = audioCtx.createGain();
 
-const volumeControl = document.querySelector('[data-action="volume"]');
-volumeControl.addEventListener('input', function() {
-	gainNode.gain.value = this.value;
+const volumeControl1 = document.getElementById('volume1');
+volumeControl1.addEventListener('input', function() {
+	gainNode1.gain.value = this.value;
 }, false);
 
 // panning
-const pannerOptions = {pan: 0};
-const panner = new StereoPannerNode(audioCtx, pannerOptions);
+const pannerOption1 = {pan: 0};
+const panner = new StereoPannerNode(audioCtx, pannerOption1);
 
-const pannerControl = document.querySelector('[data-action="panner"]');
+
+const pannerControl = document.getElementById('panner1');
 pannerControl.addEventListener('input', function() {
 	panner.pan.value = this.value;	
 }, false);
 
 // connect our graph
-track.connect(gainNode).connect(panner).connect(audioCtx.destination);
+track1.connect(gainNode1).connect(panner).connect(audioCtx.destination);
 
 const powerButton = document.getElementById('onoff1');
-
 
 powerButton.addEventListener('click', function() {
 	if (this.dataset.power === 'on') {
@@ -74,8 +70,6 @@ powerButton.addEventListener('click', function() {
 	this.setAttribute( "aria-checked", state ? "false" : "true" );
 	console.log(audioCtx.state);
 }, false);
-
-// Track credit: Outfoxing the Fox by Kevin MacLeod under Creative Commons 
 
 
 
