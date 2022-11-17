@@ -1,21 +1,16 @@
-console.clear();
-
-// instigate our audio context
-
-// for cross browser
+// Define the audio context
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 
-// load some sound
-
- audio1 = new Audio();
- audio1.src = "bassguitar.mp3";
+// load the audio files
+audio1 = new Audio();
+audio1.src = "bassguitar.mp3";
 const audioElement = document.getElementById('audio1');
 
 
 const track = audioCtx.createMediaElementSource(audioElement);
 
-const playButton = document.querySelector('.tape-controls-play');
+const playButton = document.querySelector('.track1Play');
 
 // play pause audio
 playButton.addEventListener('click', function() {
@@ -65,7 +60,8 @@ pannerControl.addEventListener('input', function() {
 // connect our graph
 track.connect(gainNode).connect(panner).connect(audioCtx.destination);
 
-const powerButton = document.querySelector('.control-power');
+const powerButton = document.getElementById('onoff1');
+
 
 powerButton.addEventListener('click', function() {
 	if (this.dataset.power === 'on') {
