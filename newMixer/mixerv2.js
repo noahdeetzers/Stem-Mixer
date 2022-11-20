@@ -48,13 +48,12 @@ const samplePaths = ["https://audio.jukehost.co.uk/QvAOFlnXsqXqpNl1VT3GEhBVSrc6R
 // 17. synth 2
 
 
-
 // volume
-const gainNode1 = audioContext.createGain();
-const volumeControl1 = document.getElementById('volume1');
-volumeControl1.addEventListener('input', function() {
-	gainNode1.gain.value = this.value;
-}, false);
+let gainNode1;
+let volumeControl1;
+
+let gainNodes = [];
+let volumeControls = [];
 
 
 startCtxButton.addEventListener("click", () => {
@@ -174,5 +173,62 @@ function move() {
         elem.innerHTML = (trackCounter/samplePaths.length) * 100  + "%";
       }
     }
+    addTrack();
   }
 
+function addTrack() {
+    let volumeId = 0;
+    let div = document.createElement("div");
+    div.id = 'track' + trackCounter;
+    div.className = 'track';
+    div.innerHTML = `<input type="range" id=${'volume' + trackCounter} min="0" max="2" value="1" step="0.01"/>
+       <label for=${'volume' + trackCounter}>VOL</label>
+    
+       <input type="range" id=${'panner' + trackCounter} min="-1" max="1" value="0" step="0.01"/>
+       <label for=${'panner' + trackCounter}>PAN</label>
+      
+       <button id=${'onOff' + trackCounter} class="onOffButton" aria-checked="false" data-power="on">
+           <label for=${'onOff' + trackCounter}>ON/OFF</label>
+       </button>;`
+
+    var element = document.getElementById("trackList");
+    element.appendChild(div);
+
+    gainNodes[trackCounter] = audioContext.createGain();
+    volumeControls[trackCounter] = document.getElementById('volume' + trackCounter);
+    volumeControls[trackCounter].addEventListener('input', function(e) {
+        gainNodes[trackCounter].gain.value = this.value;
+        console.log(e.target.id + ": " + this.value);
+    }, false);
+// 
+    // // volume
+    // gainNode1 = audioContext.createGain();
+    // volumeControl1 = document.getElementById('volume1');
+    // volumeControl1.addEventListener('input', function() {
+    //     gainNode1.gain.value = this.value;
+    // }, false);
+
+}
+
+
+// // volume
+// const gainNode1 = audioContext.createGain();
+// const volumeControl1 = document.getElementById('volume1');
+// volumeControl1.addEventListener('input', function() {
+// 	gainNode1.gain.value = this.value;
+// }, false);
+
+
+//   `<div class="entry">${value} <img class="" src= "${image}"></div>`
+
+// <div id="track1" class="track"> DRUMS
+//   <input type="range" id="volume1" min="0" max="2" value="1" step="0.01"/>
+//   <label for="volume1">VOL</label>
+
+//   <input type="range" id="panner1" min="-1" max="1" value="0" step="0.01"/>
+//   <label for="panner1">PAN</label>
+  
+//   <button id="onoff1" class="onOffButton" aria-checked="false" data-power="on">
+//       <label for="onoff1">ON/OFF</label>
+//   </button>
+// </div>
