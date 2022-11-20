@@ -51,9 +51,11 @@ const samplePaths = ["https://audio.jukehost.co.uk/QvAOFlnXsqXqpNl1VT3GEhBVSrc6R
 // volume
 let gainNode1;
 let volumeControl1;
+let gainNode2;
+let volumeControl2;
 
-let gainNodes = [];
-let volumeControls = [];
+// let gainNodes = [];
+// let volumeControls = [];
 
 
 startCtxButton.addEventListener("click", () => {
@@ -73,29 +75,29 @@ startCtxButton.addEventListener("click", () => {
             playSampleButton.setAttribute( 'aria-checked', playButtonState ? "false" : "true" );
 
 
-            // const tracks = []
+            // let tracks = []
             // // REFACTOR WITH LOOP??
             // for (const i of samples) {
-            //     tracks[i] = playSample(samples[i],0 );
+            //     tracks[i] = playSample(samples[i],0,i);
             // }
 
-            const track1 = playSample(samples[0], 0);
-            const track2 = playSample(samples[1], 0);
-            const track3 = playSample(samples[2], 0);
-            const track4 = playSample(samples[3], 0);
-            const track5 = playSample(samples[4], 0);
-            const track6 = playSample(samples[5], 0);
-            const track7 = playSample(samples[6], 0);
-            const track8 = playSample(samples[7], 0);
-            const track9 = playSample(samples[8], 0);
-            const track10 = playSample(samples[9], 0);
-            const track11 = playSample(samples[10], 0);
-            const track12 = playSample(samples[11], 0);
-            const track13 = playSample(samples[12], 0);
-            const track14 = playSample(samples[13], 0);
-            const track15 = playSample(samples[14], 0);
-            const track16 = playSample(samples[15], 0);
-            const track17 = playSample(samples[16], 0);
+            // const track1 = playSample(samples[0], 0);
+            // const track2 = playSample(samples[1], 0);
+            // const track3 = playSample(samples[2], 0);
+            const track4 = playSample(samples[3], 0,3);
+            // const track5 = playSample(samples[4], 0);
+            // const track6 = playSample(samples[5], 0);
+            const track7 = playSample(samples[6], 0,6);
+            // const track8 = playSample(samples[7], 0);
+            // const track9 = playSample(samples[8], 0);
+            // const track10 = playSample(samples[9], 0);
+            // const track11 = playSample(samples[10], 0);
+            // const track12 = playSample(samples[11], 0);
+            // const track13 = playSample(samples[12], 0);
+            // const track14 = playSample(samples[13], 0);
+            // const track15 = playSample(samples[14], 0);
+            // const track16 = playSample(samples[15], 0);
+            // const track17 = playSample(samples[16], 0);
 
 
             stopSampleButton.addEventListener("click", () => {
@@ -149,13 +151,23 @@ async function setupSamples(paths) {
     return audioBuffers;
 }
 
-function playSample(audioBuffer, time) {
-    const sampleSource = audioContext.createBufferSource();
-    sampleSource.buffer = audioBuffer;
-    sampleSource.connect(gainNode1);
+// function playSample(audioBuffer, time,idx) {
+//     const sampleSource = audioContext.createBufferSource();
+//     sampleSource.buffer = audioBuffer;
+//     sampleSource.connect(gainNodes[idx]);
+//     gainNodes[idx].connect(audioContext.destination);
+//     sampleSource.start(time);
+//     return sampleSource;
+// }
+function playSample(audioBuffer, time,idx) {
+    let sampleSources = [];
+    sampleSources[idx] = audioContext.createBufferSource();
+    sampleSources[idx].buffer = audioBuffer;
+    sampleSources[idx].connect(gainNode1);
+
     gainNode1.connect(audioContext.destination);
-    sampleSource.start(time);
-    return sampleSource;
+    sampleSources[idx].start(time);
+    return sampleSources[1];
 }
 
 
@@ -194,19 +206,21 @@ function addTrack() {
     var element = document.getElementById("trackList");
     element.appendChild(div);
 
-    gainNodes[trackCounter] = audioContext.createGain();
-    volumeControls[trackCounter] = document.getElementById('volume' + trackCounter);
-    volumeControls[trackCounter].addEventListener('input', function(e) {
-        gainNodes[trackCounter].gain.value = this.value;
-        console.log(e.target.id + ": " + this.value);
-    }, false);
-// 
-    // // volume
-    // gainNode1 = audioContext.createGain();
-    // volumeControl1 = document.getElementById('volume1');
-    // volumeControl1.addEventListener('input', function() {
-    //     gainNode1.gain.value = this.value;
+    // gainNodes[trackCounter] = audioContext.createGain();
+    // volumeControls[trackCounter] = document.getElementById('volume' + trackCounter);
+    // volumeControls[trackCounter].addEventListener('input', function(e) {
+    //     gainNodes[trackCounter].gain.value = this.value;
+    //     console.log(e.target.id + ": " + this.value);
     // }, false);
+
+    // volume
+    gainNode1 = audioContext.createGain();
+    volumeControl1 = document.getElementById('volume1');
+    volumeControl1.addEventListener('input', function(e) {
+        gainNode1.gain.value = this.value;
+        console.log(e.target.id + ": " + this.value);
+
+    }, false);
 
 }
 
