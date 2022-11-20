@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mixer</title>
+
+    <link rel="stylesheet" type="text/css" href="mixerv2.css" />
+
+</head>
+<body>
+    <button class="startButton"> load Audio Files </button>
+    <button class="playSample" aria-checked="true"> Play Sample</button>
+    <button class="stopSample"> Stop Sample</button>
+
+            
+    <div id="track1" class="track"> DRUMS
+        <input type="range" id="volume1" min="0" max="2" value="1" step="0.01"/>
+        <label for="volume1">VOL</label>
+
+        <input type="range" id="panner1" min="-1" max="1" value="0" step="0.01"/>
+        <label for="panner1">PAN</label>
+        
+        <button id="onoff1" class="onOffButton" aria-checked="false" data-power="on">
+            <label for="onoff1">ON/OFF</label>
+        </button>
+    </div>
+
+    <!-- Progress bar -->
+    <div id="myProgress">
+        <h3>Progress Bar</h3>
+        <div id="myBar"></div>
+    </div>
+
+
+    <script src="mixerv2.js"></script>
+</body>
+</html>
