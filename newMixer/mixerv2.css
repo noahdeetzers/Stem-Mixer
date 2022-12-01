@@ -1,7 +1,21 @@
+
+.contentArea {
+  /* Background */
+  margin: auto;
+  width: 50%;
+  padding: 10px;
+  height: 80%;
+  
+  background: #D9D9D9;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 17px;
+}
+
+
 #myProgress {
     width: 100%;
     background-color: #ddd;
-  }
+}
   
   #myBar {
     width: 0%;
@@ -11,3 +25,38 @@
     line-height: 30px;
     color: white;
   }
+
+/* 
+  .slider {
+    -webkit-appearance: none;
+    width: 25%;
+    height: 10px;
+    border-radius: 5px;
+    background: #393737;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .slider:hover {
+    opacity: 1;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 23px;
+    height: 24px;
+    border: 0;
+    background: url('slider.png');
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 23px;
+    height: 24px;
+    border: 0;
+    background: url('slider.png');
+    cursor: pointer;
+  } */
