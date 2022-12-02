@@ -10,25 +10,17 @@
 
 </head>
 <body>
-
     <div class="contentArea"> 
 
-        <button class="startButton"> load Audio Files </button>
+        <button class="startButton" onclick="createMasterGain();"> load Audio Files </button>
         <button class="playSample" aria-checked="true"> Play Sample</button>
         <button class="stopSample"> Stop Sample</button>
 
-        <!-- <div id="track1" class="track"> DRUMS
-            <input type="range" id="volume1" min="0" max="2" value="1" step="0.01"/>
-            <label for="volume1">VOL</label>
-
-            <input type="range" id="panner1" min="-1" max="1" value="0" step="0.01"/>
-            <label for="panner1">PAN</label>
-            
-            <button id="onoff1" class="onOffButton" aria-checked="false" data-power="on">
-                <label for="onoff1">ON/OFF</label>
+        <div id="MasterGain" class="track">
+            <input type="range" id="masterGain" min="0" max="1" value="1" step="0.01"/>
+            <label for="masterGain">MASTER GAIN</label>
             </button>
-        </div> -->
-
+        </div>
 
         <div id="trackList"></div>
 
@@ -36,11 +28,15 @@
         <div id="myProgress">
             <h3>Progress Bar</h3>
             <div id="myBar"></div>
-        </div>        
+        </div>   
+
+        <!-- Visualizer -->
+        <canvas id="visualizer" width="500px" height="500px" ></canvas>
+
+
     </div>
 
-
-
     <script src="mixerv2.js"></script>
+    <script src="https://raw.githubusercontent.com/g200kg/webaudio-controls/master/webaudio-controls.js"></script>
 </body>
 </html>

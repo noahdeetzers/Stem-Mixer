@@ -2,7 +2,7 @@
 .contentArea {
   /* Background */
   margin: auto;
-  width: 50%;
+  width: 80%;
   padding: 10px;
   height: 80%;
   
@@ -26,8 +26,8 @@
     color: white;
   }
 
-/* 
-  .slider {
+
+  /* .slider {
     -webkit-appearance: none;
     width: 25%;
     height: 10px;

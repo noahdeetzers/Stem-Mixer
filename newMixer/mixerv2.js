@@ -27,6 +27,7 @@ const samplePaths = ["QvAOFlnXsqXqpNl1VT3GEhBVSrc6R6Go",
               "wyQxt010mqnqMfqgTQfH7jFp8B3ks48l",
                "0qkB0twINwgqLW7ocoq6XXF9nn7iX1P8"  ];
 
+const trackNames = ["2nd lead","2nd lead synth solo","bass harmonies","bass","background vox","lead vocal double","drum kit","guitar","horns","lead vox","organ solo","rhodes","shaker","strings","synth pads","synth 1","synth 2"];
 
 // TODO - seperate url and hash code of audio file
 
@@ -60,6 +61,24 @@ let gainNodes = [];
 let volumeControls = [];
 let panNodes = [];
 let panControls = [];
+
+let lowBandNodes = [];
+let lowBandControls = [];
+let midBandNodes = [];
+let midBandControls = [];
+let highBandNodes = [];
+let highBandControls = [];
+
+let onOffNodes = [];
+let onOffControls = [];
+let onOffStates = [];
+
+
+let masterGainNode;
+let masterGainControl;
+
+const analyserNode = new AnalyserNode(audioContext, { fftSize: 128 });
+drawVisualizer();
 
 startCtxButton.addEventListener("click", () => {
     console.log("audio context started");
@@ -150,25 +169,6 @@ async function setupSamples(paths) {
     return audioBuffers;
 }
 
-// function playSample(audioBuffer, time,idx) {
-//     const sampleSource = audioContext.createBufferSource();
-//     sampleSource.buffer = audioBuffer;
-//     sampleSource.connect(gainNodes[idx]);
-//     gainNodes[idx].connect(audioContext.destination);
-//     sampleSource.start(time);
-//     return sampleSource;
-// }
-// function playSample(audioBuffer, time,idx) {
-//     let sampleSource;
-//     sampleSource = audioContext.createBufferSource();
-//     sampleSource.buffer = audioBuffer;
-
-//     sampleSource.connect(gainNodes[idx]);
-//     gainNodes[idx].connect(audioContext.destination);
-//     sampleSource.start(time);
-//     return sampleSource;
-// }
-
 function playTracks(audioBuffer, idx) {
 
     let sampleSource;
@@ -177,10 +177,16 @@ function playTracks(audioBuffer, idx) {
 
     sampleSource.connect(gainNodes[idx]);
     gainNodes[idx].connect(panNodes[idx]);
-    panNodes[idx].connect(audioContext.destination);
+    // panNodes[idx].connect(audioContext.destination);
+    panNodes[idx].connect(lowBandNodes[idx]);
+    lowBandNodes[idx].connect(midBandNodes[idx]);
+    midBandNodes[idx].connect(highBandNodes[idx]);
+    highBandNodes[idx].connect(onOffNodes[idx]);
+    onOffNodes[idx].connect(masterGainNode);
+    masterGainNode.connect(analyserNode);
+    masterGainNode.connect(audioContext.destination);
     // gainNodes[idx].connect(audioContext.destination);
     sampleSource.start(0);
-
     
 }
 
@@ -205,15 +211,25 @@ function addTrack(_trackCounter) {
     let div = document.createElement("div");
     div.id = 'track' + _trackCounter;
     div.className = 'track';
-    div.innerHTML = `<input class="slider" type="range" id=${'volume' + _trackCounter} min="0" max="2" value="1" step="0.01"/>
+    div.innerHTML = `<span>${trackNames[_trackCounter]}</span><input class="slider" type="range" id=${'volume' + _trackCounter} min="0" max="2" value="1" step="0.01"/>
        <label for=${'volume' + _trackCounter}>VOL</label>
     
        <input class= "slider" type="range" id=${'panner' + _trackCounter} min="-1" max="1" value="0" step="0.01"/>
        <label for=${'panner' + _trackCounter}>PAN</label>
-      
-       <button id=${'onOff' + _trackCounter} class="onOffButton" aria-checked="false" data-power="on">
-           <label for=${'onOff' + _trackCounter}>ON/OFF</label>
-       </button>;`
+
+       <input class= "slider" type="range" id=${'lowBand' + _trackCounter} min="-10" max="10" value="0" step="0.01"/>
+       <label for=${'lowBand' + _trackCounter}>Low</label>
+
+       <input class= "slider" type="range" id=${'midBand' + _trackCounter} min="-10" max="10" value="0" step="0.01"/>
+       <label for=${'midBand' + _trackCounter}>Mid</label>
+
+       <input class= "slider" type="range" id=${'highBand' + _trackCounter} min="-10" max="10" value="0" step="0.01"/>
+       <label for=${'highBand' + _trackCounter}>high</label>
+       
+       <button id=${'onOff' + _trackCounter} class="onOffButton" aria-checked="true" data-power="on">
+       <label for=${'onOff' + _trackCounter}>ON/OFF</label>
+       </button>`
+   
 
     var element = document.getElementById("trackList");
     element.appendChild(div);
@@ -239,8 +255,95 @@ function addTrack(_trackCounter) {
         panNodes[_trackCounter].pan.value = this.value;
         // console.log(e.target.id + ": " + this.value);
         console.log(e.target.id + ": " + panNodes[_trackCounter].pan.value);
+    }, false);
+    
+
+    // CREATE AND MAP LOWBAND VALUES TO TRACKS
+    lowBandNodes[_trackCounter] = audioContext.createBiquadFilter();
+    lowBandControls[_trackCounter] = document.getElementById('lowBand' + _trackCounter);
+    lowBandNodes[_trackCounter].type = "lowshelf";
+    lowBandNodes[_trackCounter].frequency.value = 440;
+    lowBandControls[_trackCounter].addEventListener('input', function(e) {
+        lowBandNodes[_trackCounter].gain.value = this.value;
+        // console.log(e.target.id + ": " + this.value);
+        console.log(e.target.id + ": " + lowBandNodes[_trackCounter].gain.value);
+    }, false);
+
+
+    // CREATE AND MAP MIDBAND VALUES TO TRACKS
+    midBandNodes[_trackCounter] = audioContext.createBiquadFilter();
+    midBandControls[_trackCounter] = document.getElementById('midBand' + _trackCounter);
+    midBandNodes[_trackCounter].type = "peaking";
+    midBandNodes[_trackCounter].frequency.value = 1000;
+    midBandNodes[_trackCounter].Q.value = 0.8;
+    midBandControls[_trackCounter].addEventListener('input', function(e) {
+        midBandNodes[_trackCounter].gain.value = this.value;
+        // console.log(e.target.id + ": " + this.value);
+        console.log(e.target.id + ": " + midBandNodes[_trackCounter].gain.value);
+    }, false);
+    
+    // CREATE AND MAP HIGHBAND VALUES TO TRACKS
+    highBandNodes[_trackCounter] = audioContext.createBiquadFilter();
+    highBandControls[_trackCounter] = document.getElementById('highBand' + _trackCounter);
+    highBandNodes[_trackCounter].type = "highshelf";
+    highBandNodes[_trackCounter].frequency.value = 6000;
+    highBandControls[_trackCounter].addEventListener('input', function(e) {
+        highBandNodes[_trackCounter].gain.value = this.value;
+        // console.log(e.target.id + ": " + this.value);
+        console.log(e.target.id + ": " + highBandNodes[_trackCounter].gain.value);
+    }, false);
+
+
+    // CREATE AND MAP ONOFF VALUES TO TRACKS
+    onOffNodes[_trackCounter] = audioContext.createGain();
+    onOffControls[_trackCounter] = document.getElementById('onOff' + _trackCounter);
+    onOffControls[_trackCounter].addEventListener('click', function(e) {
+
+        onOffStates[_trackCounter] = onOffControls[_trackCounter].getAttribute('aria-checked') === "true" ? true : false;
+        onOffControls[_trackCounter].setAttribute( 'aria-checked', onOffStates[_trackCounter] ? "false" : "true" );
+
+        if (onOffStates[_trackCounter]) {
+            onOffNodes[_trackCounter].gain.value = 0;
+            onOffControls[_trackCounter].textContent = 'OFF';
+        } else {
+            onOffNodes[_trackCounter].gain.value = 1;
+            onOffControls[_trackCounter].textContent = 'ON';
+        }
 
 
     }, false);
+}
+
+function createMasterGain() {
+        // CREATE AND MAP THE GAIN NODES TO THE TRACKS
+        masterGainNode = audioContext.createGain();
+        masterGainControl = document.getElementById('masterGain');
+        masterGainControl.addEventListener('input', function(e) {
+            masterGainNode.gain.value = this.value;
+            console.log(e.target.id + ": " + this.value);
+        }, false);
+}
+
+function drawVisualizer() {
+    requestAnimationFrame(drawVisualizer);
+
+    const bufferLength = analyserNode.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    analyserNode.getByteFrequencyData(dataArray);
+    const width = visualizer.width;
+    const height = visualizer.height;
+    const barWidth = width / bufferLength;
+
+    const canvasContext = visualizer.getContext('2d');
+    canvasContext.clearRect(0, 0, width, height);
+
+    dataArray.forEach((item, index) => {
+        const y = item / 255 * height / 2;
+        const x = barWidth * index;
+
+        canvasContext.fillStyle = `rgb(${y / height * 800},0 ,0)`;
+        canvasContext.fillRect(x, height - y, barWidth, y);
+
+    })
 
 }
