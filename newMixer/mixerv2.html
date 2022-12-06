@@ -9,30 +9,38 @@
     <link rel="stylesheet" type="text/css" href="mixerv2.css" />
 
 </head>
+
 <body>
     <div class="contentArea"> 
+
 
         <button class="startButton" onclick="createMasterGain();"> load Audio Files </button>
         <button class="playSample" aria-checked="true"> Play Sample</button>
         <button class="stopSample"> Stop Sample</button>
 
-        <div id="MasterGain" class="track">
-            <input type="range" id="masterGain" min="0" max="1" value="1" step="0.01"/>
-            <label for="masterGain">MASTER GAIN</label>
+        <div id="MasterGain">
+            <input class="panSlider" type="range" id="masterGain" min="0" max="1" value="1" step="0.01"/>
             </button>
         </div>
 
-        <div id="trackList"></div>
+
+
+        <!-- Visualizer -->
+        <canvas id="visualizer" ></canvas>
+
+
+
+        <!-- <div id="trackList"></div> -->
+
+        <table id="trackList">
+            
+        </table>
 
         <!-- Progress bar -->
         <div id="myProgress">
             <h3>Progress Bar</h3>
             <div id="myBar"></div>
         </div>   
-
-        <!-- Visualizer -->
-        <canvas id="visualizer" width="500px" height="500px" ></canvas>
-
 
     </div>
 

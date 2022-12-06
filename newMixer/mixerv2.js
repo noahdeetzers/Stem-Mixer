@@ -187,6 +187,9 @@ function playTracks(audioBuffer, idx) {
     masterGainNode.connect(audioContext.destination);
     // gainNodes[idx].connect(audioContext.destination);
     sampleSource.start(0);
+
+
+    return sampleSource;
     
 }
 
@@ -208,27 +211,35 @@ function moveProgressBar(percentage) {
   }
 
 function addTrack(_trackCounter) {
-    let div = document.createElement("div");
+
+    let div = document.createElement("td");
     div.id = 'track' + _trackCounter;
     div.className = 'track';
-    div.innerHTML = `<span>${trackNames[_trackCounter]}</span><input class="slider" type="range" id=${'volume' + _trackCounter} min="0" max="2" value="1" step="0.01"/>
-       <label for=${'volume' + _trackCounter}>VOL</label>
-    
-       <input class= "slider" type="range" id=${'panner' + _trackCounter} min="-1" max="1" value="0" step="0.01"/>
-       <label for=${'panner' + _trackCounter}>PAN</label>
+    div.innerHTML = `
+        <input class= "slider" type="range" id=${'highBand' + _trackCounter} min="-10" max="10" value="0" step="0.01"/>
+        <label for=${'highBand' + _trackCounter}>high</label>    
 
-       <input class= "slider" type="range" id=${'lowBand' + _trackCounter} min="-10" max="10" value="0" step="0.01"/>
-       <label for=${'lowBand' + _trackCounter}>Low</label>
+        <input class= "slider" type="range" id=${'midBand' + _trackCounter} min="-10" max="10" value="0" step="0.01"/>
+        <label for=${'midBand' + _trackCounter}>Mid</label>
 
-       <input class= "slider" type="range" id=${'midBand' + _trackCounter} min="-10" max="10" value="0" step="0.01"/>
-       <label for=${'midBand' + _trackCounter}>Mid</label>
+        <input class= "slider" type="range" id=${'lowBand' + _trackCounter} min="-10" max="10" value="0" step="0.01"/>
+        <label for=${'lowBand' + _trackCounter}>Low</label>
 
-       <input class= "slider" type="range" id=${'highBand' + _trackCounter} min="-10" max="10" value="0" step="0.01"/>
-       <label for=${'highBand' + _trackCounter}>high</label>
+        <input class= "panSlider" type="range" id=${'panner' + _trackCounter} min="-1" max="1" value="0" step="0.01"/>
+        <label for=${'panner' + _trackCounter}>PAN</label>
+
+        <input class="slider" type="range" id=${'volume' + _trackCounter} min="0" max="2" value="1" step="0.01"/>
+        <label for=${'volume' + _trackCounter}>VOL</label>
+
+        <br></br>
        
-       <button id=${'onOff' + _trackCounter} class="onOffButton" aria-checked="true" data-power="on">
-       <label for=${'onOff' + _trackCounter}>ON/OFF</label>
-       </button>`
+        <button id=${'onOff' + _trackCounter} class="onOffButton" aria-checked="true" data-power="on">
+        <label for=${'onOff' + _trackCounter}>ON</label>
+        </button>
+        <h3>${trackNames[_trackCounter]}</h3>
+       
+       
+       `
    
 
     var element = document.getElementById("trackList");
@@ -326,7 +337,6 @@ function createMasterGain() {
 
 function drawVisualizer() {
     requestAnimationFrame(drawVisualizer);
-
     const bufferLength = analyserNode.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
     analyserNode.getByteFrequencyData(dataArray);
@@ -345,5 +355,11 @@ function drawVisualizer() {
         canvasContext.fillRect(x, height - y, barWidth, y);
 
     })
-
 }
+
+
+
+
+
+// AVI LINKS
+// https://valor-software.com/ngx-bootstrap/#/components/progressbar?tab=overview
